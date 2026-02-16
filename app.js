@@ -300,6 +300,12 @@ function init() {
         speechSynthesis.onvoiceschanged = loadVoices;
     }
     loadVoices();
+
+    // IOS Safari fix: sometimes voices aren't loaded until interaction
+    // We try to load them again on first touch
+    document.body.addEventListener('touchstart', function () {
+        if (voices.length === 0) loadVoices();
+    }, { once: true });
 }
 
 // --- Custom Phrases Logic ---
@@ -522,32 +528,56 @@ function speak(text, buttonElement) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'ja-JP';
 
+    // Improved Voice Selection Logic
+    // 1. Try Google Japanese
     let jpVoice = voices.find(voice => voice.name.includes('Google 日本語'));
+
+    // 2. Try Microsoft Natural (Edge/Windows)
     if (!jpVoice) {
         jpVoice = voices.find(voice => voice.name.includes('Microsoft') && voice.name.includes('Natural') && voice.lang.includes('ja'));
     }
+
+    // 3. Try any Microsoft Japanese
     if (!jpVoice) {
         jpVoice = voices.find(voice => voice.name.includes('Microsoft') && voice.lang.includes('ja'));
     }
+
+    // 4. Try any voice with 'ja' or 'JP' in lang
     if (!jpVoice) {
-        jpVoice = voices.find(voice => voice.lang.includes('ja') || voice.name.includes('Japan'));
+        jpVoice = voices.find(voice => voice.lang === 'ja-JP' || voice.lang === 'ja_JP');
     }
 
+    // 5. Broad search
+    if (!jpVoice) {
+        jpVoice = voices.find(voice => voice.lang.includes('ja'));
+    }
+
+    // Apply voice if found
     if (jpVoice) {
         utterance.voice = jpVoice;
-        utterance.rate = 0.9;
-        utterance.pitch = 1.0;
+    }
+    // If not found, we rely on utterance.lang = 'ja-JP' which usually works with default system voice.
+
+    utterance.rate = 1.0; // Reset to default speed for better clarity
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    if (buttonElement) {
+        buttonElement.classList.add('playing');
+
+        // Timeout fallback in case onend doesn't fire (common mobile bug)
+        setTimeout(() => {
+            buttonElement.classList.remove('playing');
+        }, 3000); // 3 seconds max visual feedback
     }
 
-    buttonElement.classList.add('playing');
-
     utterance.onend = () => {
-        buttonElement.classList.remove('playing');
+        if (buttonElement) buttonElement.classList.remove('playing');
     };
 
     utterance.onerror = (event) => {
         console.error('Speech synthesis error:', event);
-        buttonElement.classList.remove('playing');
+        if (buttonElement) buttonElement.classList.remove('playing');
     };
 
     synth.speak(utterance);

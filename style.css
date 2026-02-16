@@ -47,21 +47,49 @@ body {
 }
 
 /* Header */
+/* Header */
 .app-header {
     background-color: var(--card-bg);
-    padding: 1rem;
+    padding: 0.75rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     z-index: 10;
     gap: 0.5rem;
+    flex-wrap: wrap;
+    /* Allow wrapping on very small screens */
 }
 
 .app-header h1 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--primary-dark);
+    margin-right: auto;
+    /* Ensure title pushes buttons to right */
+}
+
+@media (max-width: 480px) {
+    .app-header {
+        padding: 0.5rem;
+    }
+
+    .app-header h1 {
+        font-size: 1rem;
+    }
+
+    .header-left {
+        margin-right: auto;
+    }
+
+    .header-right {
+        gap: 0.25rem;
+    }
+
+    .icon-button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
 }
 
 .heart-icon {
@@ -77,21 +105,30 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     /* 2 columns for mobile */
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.75rem;
+    /* Slightly reduced gap for mobile */
+    padding: 0.75rem;
     overflow-y: auto;
     align-content: start;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
     .board-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        padding: 1rem;
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
     .board-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .board-grid {
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
@@ -186,19 +223,44 @@ body {
 
 
 .card-icon {
-    font-size: 3.5rem;
-    /* Larger icons */
+    font-size: 3rem;
+    /* Slightly smaller base icon size */
     line-height: 1;
     margin-bottom: 0.2rem;
 }
 
 .card-label {
-    font-size: 1.4rem;
-    /* Larger text */
+    font-size: 1.1rem;
     font-weight: 700;
     text-align: center;
     color: var(--text-color);
-    line-height: 1.2;
+    line-height: 1.25;
+    word-break: break-all;
+    /* Break long words if necessary */
+}
+
+@media (min-width: 768px) {
+    .card-icon {
+        font-size: 3.5rem;
+    }
+
+    .card-label {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .card-icon {
+        font-size: 2.5rem;
+    }
+
+    .card-label {
+        font-size: 1rem;
+    }
+
+    .comm-card {
+        padding: 0.5rem;
+    }
 }
 
 /* Footer */
@@ -271,9 +333,11 @@ body {
 
 .modal-content {
     background-color: #fff;
-    width: 90%;
+    width: 95%;
+    /* Keep wide on mobile */
     max-width: 500px;
-    max-height: 90vh;
+    max-height: 85vh;
+    /* Avoid full height */
     border-radius: var(--border-radius);
     border: 3px solid #333;
     /* High contrast border */
@@ -282,6 +346,27 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+    /* For absolute positioning if needed */
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 98%;
+        max-height: 90vh;
+        border-width: 2px;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .close-button {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.2rem;
+    }
 }
 
 .modal-header {
@@ -342,14 +427,17 @@ body {
     background-color: #fff;
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.8rem;
+    /* Slightly reduced padding */
     border-radius: 30px;
-    /* Pill shape */
     font-weight: 800;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    /* Slightly reduced base size */
     transition: all 0.1s;
     box-shadow: 2px 2px 0px rgba(211, 47, 47, 0.2);
+    white-space: nowrap;
+    /* Prevent button text wrapping */
 }
 
 .icon-button:active {
