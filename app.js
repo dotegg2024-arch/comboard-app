@@ -493,27 +493,50 @@ function renderNews(news) {
         const div = document.createElement('div');
         div.className = 'news-item';
 
-        let catClass = 'cat-info';
-        if (item.category === 'important') catClass = 'cat-important';
-        if (item.category === 'alert') catClass = 'cat-alert';
+        // Category Logic
+        let catClass = 'cat-info'; // Default blue
+        let catLabel = item.category;
+
+        // Map known categories or use raw text
+        if (item.category === 'important' || item.category === '重要') {
+            catClass = 'cat-important';
+            catLabel = '重要';
+        } else if (item.category === 'alert' || item.category === '緊急' || item.category === '注意') {
+            catClass = 'cat-alert';
+            catLabel = item.category === 'alert' ? '注意' : item.category;
+        } else if (item.category === 'info' || item.category === 'お知らせ') {
+            catClass = 'cat-info';
+            catLabel = 'お知らせ';
+        } else {
+            // Unknown category - use default style but keep text
+            catClass = 'cat-gray';
+        }
+
+        // Date Logic (Simple YYYY.MM.DD)
+        let dateStr = item.date;
+        try {
+            const d = new Date(item.date);
+            if (!isNaN(d.getTime())) {
+                const y = d.getFullYear();
+                const m = (d.getMonth() + 1).toString().padStart(2, '0');
+                const day = d.getDate().toString().padStart(2, '0');
+                dateStr = `${y}.${m}.${day}`;
+            }
+        } catch (e) {
+            console.log('Date parse error', e);
+        }
 
         div.innerHTML = `
-            <span class="news-category ${catClass}">${mapCategory(item.category)}</span>
-            <span class="news-date">${item.date}</span>
-            <a href="${item.url}" class="news-title">${item.title}</a>
+            <div class="news-meta">
+                <span class="news-date">${dateStr}</span>
+                <span class="news-category ${catClass}">${catLabel}</span>
+            </div>
+            <a href="${item.url}" class="news-title" target="_blank">${item.title}</a>
         `;
         newsTicker.appendChild(div);
     });
 }
-
-function mapCategory(cat) {
-    switch (cat) {
-        case 'important': return '重要';
-        case 'info': return 'お知らせ';
-        case 'alert': return '注意';
-        default: return 'その他';
-    }
-}
+// mapCategory function removed as logic is now inline or handled above
 
 // --- Speech & Board Logic ---
 function loadVoices() {
