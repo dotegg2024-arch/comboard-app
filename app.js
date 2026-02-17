@@ -494,21 +494,22 @@ function renderNews(news) {
         div.className = 'news-item';
 
         // Category Logic
-        let catClass = 'cat-info'; // Default blue
-        let catLabel = item.category;
+        let catClass = 'cat-gray'; // Change default to gray to spot unmatched items
+        let rawCat = (item.category || '').toString().trim();
+        let catLabel = rawCat;
 
         // Map known categories or use raw text
-        if (item.category === 'important' || item.category === '重要') {
+        if (rawCat === 'important' || rawCat === '重要') {
             catClass = 'cat-important';
             catLabel = '重要';
-        } else if (item.category === 'alert' || item.category === '緊急' || item.category === '注意') {
+        } else if (rawCat === 'alert' || rawCat === '緊急' || rawCat === '注意') {
             catClass = 'cat-alert';
-            catLabel = item.category === 'alert' ? '注意' : item.category;
-        } else if (item.category === 'info' || item.category === 'お知らせ') {
+            catLabel = rawCat === 'alert' ? '注意' : rawCat;
+        } else if (rawCat === 'info' || rawCat === 'お知らせ') {
             catClass = 'cat-info';
             catLabel = 'お知らせ';
         } else {
-            // Unknown category - use default style but keep text
+            // Unknown category - use gray
             catClass = 'cat-gray';
         }
 

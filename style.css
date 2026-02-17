@@ -727,12 +727,11 @@ textarea:focus {
 }
 
 .news-date {
-    font-size: 0.8rem;
-    color: #999;
-    /* Light gray for subtlety */
-    font-family: 'Roboto', sans-serif;
-    /* Clean font for numbers */
-    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    /* Smaller */
+    color: #bdbdbd;
+    /* Very light gray */
+    font-weight: normal;
 }
 
 .news-title {
@@ -763,17 +762,22 @@ textarea:focus {
     background-color: #D32F2F;
 }
 
+/* Red */
 .cat-info {
     background-color: #1976D2;
 }
 
+/* Blue */
 .cat-alert {
-    background-color: #F57C00;
+    background-color: #FF9800 !important;
 }
 
+/* Orange - explicit priority */
 .cat-gray {
-    background-color: #757575;
+    background-color: #9E9E9E;
 }
+
+/* Gray */
 
 /* Fallback */
 
